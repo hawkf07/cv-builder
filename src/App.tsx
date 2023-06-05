@@ -22,39 +22,45 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import autoAnimate from "@formkit/auto-animate";
 import { z } from "zod";
-import { useFormStore } from "./utils/store";
+import { type page as pageType, useFormStore } from "./utils/store";
 import { StepOneForm, StepThreeForm, StepTwoForm } from "./components/Forms";
 
 function App() {
   const methods = useForm<contactInformation>();
 
   const {
-    setContactInformation,
+    setData,
     wizardPageNumber,
     personalInformationNameList,
-    contactInformation,
     setPageWizardNumber,
+    data,
+    setPage,
+    page,
   } = useFormStore();
   const onSubmit: SubmitHandler<z.infer<typeof contactInformationZodType>> = (
     data
   ) => {
-    setContactInformation(data);
+    setData(data);
   };
+  useEffect(() => {
+    console.log(Object.entries(data?.skills));
+  }, [data]);
 
   return (
     <>
       <header>
         <h1 className="text-center upppercase">CV Builder</h1>
         <div className="flex items-center justify-center">
-          {[1, 2, 3].map((num) => (
-            <SecondaryButton
-              value={num}
-              onClick={() => setPageWizardNumber(num)}
-              key={num}
-            >
-              {num}
-            </SecondaryButton>
-          ))}
+          <select
+            className="p-2 w-32
+           bg-white shadow-md rounded-md text-center"
+          >
+            {["editor", "view", "demo"].map((page) => (
+              <option value={page} onClick={() => setPage(page)} key={page}>
+                {page}
+              </option>
+            ))}
+          </select>
         </div>
       </header>
       <main className="p-3">
