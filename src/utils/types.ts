@@ -11,4 +11,4 @@ export const contactInformationZodType = z.object({
   skills: z.record(z.string(), z.string()),
 });
 
-export type contactInformation = z.infer<typeof contactInformationZodType>;
+export type data = z.infer<typeof contactInformationZodType>;
