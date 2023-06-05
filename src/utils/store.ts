@@ -1,8 +1,9 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { create, useStore } from "zustand";
 import { SubmitHandler, FieldValues } from "react-hook-form";
+export type page = string;
 
-import { contactInformation } from "./types";
+import { data } from "./types";
 type formStore = {
   inputOnChangeHandler: (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -10,16 +11,22 @@ type formStore = {
   inputValue: {
     [x: string]: string;
   };
-  contactInformation: contactInformation | null;
-  setContactInformation: (data: contactInformation) => void;
+  data: data | null;
+  setData: (data: data) => void;
   personalInformationNameList: string[];
   wizardPageNumber: number;
   setPageWizardNumber: (page: number) => void;
   skillsList: string[];
   setSkillsList: (skill: string) => void;
+  page: page;
+  setPage: (page: page) => void;
 };
 
 export const useFormStore = create<formStore>((set, get) => ({
+  page: "editor",
+  setPage(page) {
+    set({ page: page });
+  },
   inputOnChangeHandler(e) {
     set({
       inputValue: {
@@ -29,12 +36,12 @@ export const useFormStore = create<formStore>((set, get) => ({
   },
 
   inputValue: {},
-  contactInformation: null,
-  setContactInformation(data) {
+  data: null,
+  setData(data) {
     console.log(data);
-    set({ contactInformation: data });
+    set({ data: data });
   },
-  personalInformationNameList: ["address", "phone number", "email"],
+  personalInformationNameList: ["address", "phone number", "email", "linkedin"],
   wizardPageNumber: 1,
   setPageWizardNumber(page) {
     set({ wizardPageNumber: page });
