@@ -1,11 +1,11 @@
 import { UseFormReturn, useForm, useFormContext } from "react-hook-form";
 import { MainButton, SecondaryButton } from "./Button";
-import { } from "../utils/types";
+import {} from "../utils/types";
 import { useFormStore } from "../utils/store";
 import { Input } from "./Input";
 import { FC } from "react";
 type Form = {};
-export const StepOneForm: FC<Form> = ({ }) => {
+export const StepOneForm: FC<Form> = ({}) => {
   const { register } = useFormContext();
   const { setPageWizardNumber } = useFormStore();
   return (
@@ -36,9 +36,8 @@ export const StepTwoForm: FC<Form> = () => {
         {personalInformationNameList.map((item) => (
           <Input
             required
-            {...register(item, { required: true })}
+            {...register("contact." + item, { required: true })}
             placeholder={item}
-            type={"email" === item ? "email" : "text"}
             key={item}
             onChange={(e) => console.log(e.target.value, item)}
           />
@@ -56,9 +55,13 @@ export const StepTwoForm: FC<Form> = () => {
   );
 };
 export const StepThreeForm: FC<Form> = () => {
-  const { skillsList, setSkillsList, inputValue, inputOnChangeHandler } =
-    useFormStore();
-  const { setPageWizardNumber, wizardPageNumber } = useFormStore();
+  const {
+    skillsList,
+    setPageWizardNumber,
+    setSkillsList,
+    inputValue,
+    inputOnChangeHandler,
+  } = useFormStore();
   const { register } = useFormContext();
   return (
     <>
@@ -82,13 +85,13 @@ export const StepThreeForm: FC<Form> = () => {
         {skillsList.map((item) => (
           <Input
             required
-            {...register(item, { required: true })}
+            {...register("skills." + item, { required: true })}
             placeholder={"describe skill the " + `   '${item}'`}
             key={`${Math.random()} ${item}`}
           />
         ))}
         <div className="grid grid-cols-2 gap-3">
-          <SecondaryButton type="button" onClick={() => setPageWizardNumber(1)}>
+          <SecondaryButton type="button" onClick={() => setPageWizardNumber(2)}>
             {"<"} prev
           </SecondaryButton>
         </div>
