@@ -23,7 +23,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import autoAnimate from "@formkit/auto-animate";
 import { z } from "zod";
 import { type page as pageType, useFormStore } from "./utils/store";
-import { StepOneForm, StepThreeForm, StepTwoForm } from "./components/Forms";
+import {
+  StepFourForm,
+  StepOneForm,
+  StepThreeForm,
+  StepTwoForm,
+} from "./components/Forms";
 
 function App() {
   const methods = useForm<contactInformation>();
@@ -41,11 +46,8 @@ function App() {
     data
   ) => {
     setData(data);
+    console.log(data);
   };
-  useEffect(() => {
-    console.log(Object.entries(data?.skills));
-  }, [data]);
-
   return (
     <>
       <header>
@@ -75,6 +77,8 @@ function App() {
               <StepTwoForm />
             ) : wizardPageNumber === 3 ? (
               <StepThreeForm />
+            ) : wizardPageNumber === 4 ? (
+              <StepFourForm />
             ) : null}
           </form>
         </FormProvider>

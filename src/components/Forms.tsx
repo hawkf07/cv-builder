@@ -56,11 +56,11 @@ export const StepTwoForm: FC<Form> = () => {
 };
 export const StepThreeForm: FC<Form> = () => {
   const {
-    skillsList,
     setPageWizardNumber,
-    setSkillsList,
     inputValue,
     inputOnChangeHandler,
+    skillsList,
+    setSkillsList,
   } = useFormStore();
   const { register } = useFormContext();
   return (
@@ -94,8 +94,58 @@ export const StepThreeForm: FC<Form> = () => {
           <SecondaryButton type="button" onClick={() => setPageWizardNumber(2)}>
             {"<"} prev
           </SecondaryButton>
+          <SecondaryButton type="button" onClick={() => setPageWizardNumber(4)}>
+            {">"} next
+          </SecondaryButton>
         </div>
         <MainButton>Submit</MainButton>
+      </div>
+    </>
+  );
+};
+export const StepFourForm: FC<Form> = () => {
+  const {
+    setPageWizardNumber,
+    experienceList,
+    setExperienceList,
+    inputValue,
+    inputOnChangeHandler,
+  } = useFormStore();
+  const { register } = useFormContext();
+  return (
+    <>
+      <header>
+        <h1>Professional Experience</h1>
+      </header>
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-2">
+          <Input
+            placeholder="add professional experience"
+            name="experienceInput"
+            onKeyUp={(e) => inputOnChangeHandler(e)}
+          />
+          <SecondaryButton
+            type="button"
+            onClick={() => setExperienceList(inputValue.experienceInput)}
+          >
+            +
+          </SecondaryButton>
+        </div>
+        {experienceList.map((item) => (
+          <Input
+            required
+            {...register("experience." + item, { required: true })}
+            placeholder={"describe your experience" + `   '${item}'`}
+            key={`${item}`}
+            name={item}
+          />
+        ))}
+        <div className="grid grid-cols-2 gap-3">
+          <SecondaryButton type="button" onClick={() => setPageWizardNumber(3)}>
+            {"<"} prev
+          </SecondaryButton>
+        </div>
+        <MainButton type="submit">Submit</MainButton>
       </div>
     </>
   );

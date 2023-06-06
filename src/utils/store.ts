@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction } from "react";
 import { create, useStore } from "zustand";
 import { SubmitHandler, FieldValues } from "react-hook-form";
 export type page = string;
@@ -6,7 +6,7 @@ export type page = string;
 import { data } from "./types";
 type formStore = {
   inputOnChangeHandler: (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   inputValue: {
     [x: string]: string;
@@ -20,17 +20,26 @@ type formStore = {
   setSkillsList: (skill: string) => void;
   page: page;
   setPage: (page: page) => void;
+  experienceList: string[];
+  setExperienceList: (experience: string) => void;
 };
 
 export const useFormStore = create<formStore>((set, get) => ({
+  experienceList: [],
+  setExperienceList(experience) {
+    const { experienceList } = get();
+    set({ experienceList: [...experienceList, experience] });
+  },
   page: "editor",
   setPage(page) {
     set({ page: page });
   },
   inputOnChangeHandler(e) {
+    const { inputValue } = get();
     set({
       inputValue: {
-        [e.target.name]: e.target.value,
+        ...inputValue,
+        [e.currentTarget.name]: e.target.value,
       },
     });
   },
@@ -38,7 +47,6 @@ export const useFormStore = create<formStore>((set, get) => ({
   inputValue: {},
   data: null,
   setData(data) {
-    console.log(data);
     set({ data: data });
   },
   personalInformationNameList: ["address", "phone number", "email", "linkedin"],
@@ -50,6 +58,5 @@ export const useFormStore = create<formStore>((set, get) => ({
   setSkillsList(skill) {
     const { skillsList } = get();
     set({ skillsList: [...skillsList, skill] });
-    console.log(skill);
   },
 }));
