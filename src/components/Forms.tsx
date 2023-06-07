@@ -1,11 +1,10 @@
 import { UseFormReturn, useForm, useFormContext } from "react-hook-form";
 import { MainButton, SecondaryButton } from "./Button";
-import {} from "../utils/types";
 import { useFormStore } from "../utils/store";
 import { Input } from "./Input";
 import { FC } from "react";
 type Form = {};
-export const StepOneForm: FC<Form> = ({}) => {
+export const StepOneForm: FC<Form> = ({ }) => {
   const { register } = useFormContext();
   const { setPageWizardNumber } = useFormStore();
   return (
@@ -14,11 +13,12 @@ export const StepOneForm: FC<Form> = ({}) => {
         <h1>Summary</h1>
       </header>
       <textarea
-        className="focus:outline-blue-400 p-2 px-4 w-full shadow rounded-xl bg-white"
+        className="focus:outline-blue-400 p-2 px-4 w-full shadow rounded-md border border-gray-400 bg-white"
         placeholder="write about the summary of the portofolio"
+        required
         {...register("summary")}
       />
-      <MainButton onClick={() => setPageWizardNumber(2)}>Next</MainButton>
+      <MainButton type="submit">Next</MainButton>
     </div>
   );
 };
@@ -39,21 +39,23 @@ export const StepTwoForm: FC<Form> = () => {
             {...register("contact." + item, { required: true })}
             placeholder={item}
             key={item}
-            onChange={(e) => console.log(e.target.value, item)}
+            type={item === "email" ? "email" : "text"}
           />
         ))}
         <div className="grid grid-cols-2 gap-3">
-          <SecondaryButton type="button" onClick={() => setPageWizardNumber(1)}>
+          <SecondaryButton
+            type="button"
+            onClick={() => setPageWizardNumber("-")}
+          >
             prev
           </SecondaryButton>
-          <SecondaryButton type="button" onClick={() => setPageWizardNumber(3)}>
-            next
-          </SecondaryButton>
+          <SecondaryButton type="submit">next</SecondaryButton>
         </div>
       </div>
     </>
   );
 };
+
 export const StepThreeForm: FC<Form> = () => {
   const {
     setPageWizardNumber,
@@ -86,19 +88,19 @@ export const StepThreeForm: FC<Form> = () => {
           <Input
             required
             {...register("skills." + item, { required: true })}
-            placeholder={"describe skill the " + `   '${item}'`}
-            key={`${Math.random()} ${item}`}
+            placeholder={"describe skill the " + ` '${item}'`}
+            key={`${Math.random()} `}
           />
         ))}
         <div className="grid grid-cols-2 gap-3">
-          <SecondaryButton type="button" onClick={() => setPageWizardNumber(2)}>
+          <SecondaryButton
+            type="button"
+            onClick={() => setPageWizardNumber("-")}
+          >
             {"<"} prev
           </SecondaryButton>
-          <SecondaryButton type="button" onClick={() => setPageWizardNumber(4)}>
-            {">"} next
-          </SecondaryButton>
+          <MainButton type="submit">Submit</MainButton>
         </div>
-        <MainButton>Submit</MainButton>
       </div>
     </>
   );
@@ -108,6 +110,7 @@ export const StepFourForm: FC<Form> = () => {
     setPageWizardNumber,
     experienceList,
     setExperienceList,
+    data,
     inputValue,
     inputOnChangeHandler,
   } = useFormStore();
@@ -122,7 +125,7 @@ export const StepFourForm: FC<Form> = () => {
           <Input
             placeholder="add professional experience"
             name="experienceInput"
-            onKeyUp={(e) => inputOnChangeHandler(e)}
+            onChange={(e) => inputOnChangeHandler(e)}
           />
           <SecondaryButton
             type="button"
@@ -131,21 +134,24 @@ export const StepFourForm: FC<Form> = () => {
             +
           </SecondaryButton>
         </div>
-        {experienceList.map((item) => (
+        {experienceList.map((value) => (
           <Input
-            required
-            {...register("experience." + item, { required: true })}
-            placeholder={"describe your experience" + `   '${item}'`}
-            key={`${item}`}
-            name={item}
+            {...register("experience." + value)}
+            placeholder={"describe your experience" + ` '${value}'`}
+            key={`${Math.random()} ${value}`}
+            onChange={(e) => console.log(e.target.value, value)}
           />
         ))}
         <div className="grid grid-cols-2 gap-3">
-          <SecondaryButton type="button" onClick={() => setPageWizardNumber(3)}>
+          <SecondaryButton
+            onClick={() => {
+              setPageWizardNumber("-");
+            }}
+          >
             {"<"} prev
           </SecondaryButton>
+          <MainButton type="submit">Submit</MainButton>
         </div>
-        <MainButton type="submit">Submit</MainButton>
       </div>
     </>
   );
