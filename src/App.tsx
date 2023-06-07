@@ -11,6 +11,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { Input } from "./components/Input";
 import { MainButton, SecondaryButton } from "./components/Button";
+import html2pdf from "html2pdf.js";
 import {
   FieldValues,
   useForm,
@@ -29,9 +30,14 @@ import {
   StepThreeForm,
   StepTwoForm,
 } from "./components/Forms";
+import { ViewPage } from "./components/ViewPage";
 
 function App() {
   const methods = useForm<contactInformation>();
+  const element = document.getElementById("cv");
+  useEffect(() => {
+    const worker = html2pdf().from(element).save();
+  }, []);
 
   const {
     setData,
@@ -45,6 +51,7 @@ function App() {
   const onSubmit: SubmitHandler<z.infer<typeof contactInformationZodType>> = (
     data
   ) => {
+    setPageWizardNumber("+");
     setData(data);
     console.log(data);
   };
@@ -53,36 +60,33 @@ function App() {
       <header>
         <h1 className="text-center upppercase">CV Builder</h1>
         <div className="flex items-center justify-center">
-          <select
-            className="p-2 w-32
-           bg-white shadow-md rounded-md text-center"
-          >
-            {["editor", "view", "demo"].map((page) => (
-              <option value={page} onClick={() => setPage(page)} key={page}>
-                {page}
-              </option>
-            ))}
-          </select>
+          {["editor", "view", "demo"].map((page) => (
+            <MainButton onClick={() => setPage(page)}>{page}</MainButton>
+          ))}
         </div>
       </header>
-      <main className="p-3">
-        <FormProvider {...methods}>
-          <form
-            className="flex flex-col gap-3"
-            onSubmit={methods.handleSubmit(onSubmit)}
-          >
-            {wizardPageNumber === 1 ? (
-              <StepOneForm />
-            ) : wizardPageNumber == 2 ? (
-              <StepTwoForm />
-            ) : wizardPageNumber === 3 ? (
-              <StepThreeForm />
-            ) : wizardPageNumber === 4 ? (
-              <StepFourForm />
-            ) : null}
-          </form>
-        </FormProvider>
-      </main>
+      {page == "editor" ? (
+        <main className="p-3">
+          <FormProvider {...methods}>
+            <form
+              className="flex flex-col gap-3"
+              onSubmit={methods.handleSubmit(onSubmit)}
+            >
+              {wizardPageNumber === 1 ? (
+                <StepOneForm />
+              ) : wizardPageNumber == 2 ? (
+                <StepTwoForm />
+              ) : wizardPageNumber === 3 ? (
+                <StepThreeForm />
+              ) : wizardPageNumber == 4 ? (
+                <StepFourForm />
+              ) : null}
+            </form>
+          </FormProvider>
+        </main>
+      ) : page == "view" ? (
+        <ViewPage />
+      ) : null}
     </>
   );
 }
