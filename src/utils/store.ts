@@ -5,9 +5,7 @@ export type page = string;
 
 import { data } from "./types";
 type formStore = {
-  inputOnChangeHandler: (
-    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  inputOnChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void;
   inputValue: {
     [x: string]: string;
   };
@@ -15,7 +13,7 @@ type formStore = {
   setData: (data: data) => void;
   personalInformationNameList: string[];
   wizardPageNumber: number;
-  setPageWizardNumber: (page: number) => void;
+  setPageWizardNumber: (page: string) => void;
   skillsList: string[];
   setSkillsList: (skill: string) => void;
   page: page;
@@ -28,18 +26,19 @@ export const useFormStore = create<formStore>((set, get) => ({
   experienceList: [],
   setExperienceList(experience) {
     const { experienceList } = get();
-    set({ experienceList: [...experienceList, experience] });
+
+    experienceList !== null &&
+      set({ experienceList: [...experienceList, experience] });
   },
   page: "editor",
   setPage(page) {
     set({ page: page });
   },
   inputOnChangeHandler(e) {
-    const { inputValue } = get();
+    if (e === null) null;
     set({
       inputValue: {
-        ...inputValue,
-        [e.currentTarget.name]: e.target.value,
+        [e.target.name]: e.target.value,
       },
     });
   },
@@ -49,10 +48,26 @@ export const useFormStore = create<formStore>((set, get) => ({
   setData(data) {
     set({ data: data });
   },
-  personalInformationNameList: ["address", "phone number", "email", "linkedin"],
+  personalInformationNameList: [
+    "fullName",
+    "address",
+    "phoneNumber",
+    "email",
+    "linkedin",
+  ],
   wizardPageNumber: 1,
-  setPageWizardNumber(page) {
-    set({ wizardPageNumber: page });
+  setPageWizardNumber(type) {
+    const { wizardPageNumber } = get();
+    console.log(wizardPageNumber);
+    type === "+"
+      ? set({
+        wizardPageNumber: wizardPageNumber === 4 ? 4 : wizardPageNumber + 1,
+      })
+      : type == "-"
+        ? set({
+          wizardPageNumber: wizardPageNumber === 1 ? 1 : wizardPageNumber - 1,
+        })
+        : null;
   },
   skillsList: [],
   setSkillsList(skill) {
